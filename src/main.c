@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <stdbool.h>
+#include <Windows.h>
 
 #include "enums.h"
 #include "database.h"
@@ -11,6 +12,15 @@
 
 int main()
 {
+    HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    const CONSOLE_CURSOR_INFO cursor_info = {
+        .dwSize = 100,
+        .bVisible = false
+    };
+    SetConsoleCursorInfo(console_handle, &cursor_info);
+    SetConsoleTitle("ASCII Dungeon");
+
+
     init_database();
     init_game();
 
@@ -31,8 +41,6 @@ int main()
 
     printf("Initialization finished, press any key.\n");
     getch();
-
-    printf("\e[?25l"); // hide cursor
 
     // game loop
     char input = '\n';
@@ -67,7 +75,7 @@ int main()
             //printf("\e[1;1H\e[2J");
             switch(get_current_game_state()) {
             case GAME_STATE_OVERWORLD:
-                overworld_render(&g_game.overworld);
+                overworld_render(&g_game.overworld, &console_handle);
                 break;
             case GAME_STATE_BATTLE:
                 battle_render(&g_game.battle);
@@ -78,7 +86,7 @@ int main()
         input = getch();
     }
 
-    printf("\e[?25h"); // return cursor to normal
+    //printf("\e[?25h"); // return cursor to normal
 
     return 0;
 }

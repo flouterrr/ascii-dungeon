@@ -1,7 +1,10 @@
 #ifndef OVERWORLD_H
 #define OVERWORLD_H
 
+#include <Windows.h>
+
 #include "scene.h"
+#include "utils.h"
 
 
 typedef struct {
@@ -19,7 +22,7 @@ typedef struct {
 
 
 int overworld_update(overworld_t* overworld, char input);
-void overworld_render(overworld_t* overworld);
+void overworld_render(overworld_t* overworld, HANDLE console_handle);
 
 
 #endif // OVERWORLD_H

@@ -12,17 +12,11 @@ sprite_t load_sprite(const char* filename, bool large)
     sprite_t spr;
     spr.large_sprite = large;
 
-    const char* sprite_folder_path = "assets/battle_sprites/";
-    int sprite_folder_path_len = strlen(sprite_folder_path);
-
-    const char* file_extension = ".txt";
-    int file_extension_len = strlen(sprite_folder_path);
-
-    int filename_len = strlen(filename);
-
-    int full_path_len = sprite_folder_path_len + filename_len + file_extension_len;
+    const char* folder_path = PROJECT_ROOT_DIR "assets/battle_sprites/";
+    const char* file_ext = ".txt";
+    int full_path_len = strlen(folder_path) + strlen(filename) + strlen(file_ext);
     char* file_path = malloc(sizeof(char) * (full_path_len + 1));
-    sprintf(file_path, "%s%s%s", sprite_folder_path, filename, file_extension);
+    sprintf(file_path, "%s%s%s", folder_path, filename, file_ext);
 
     FILE* fptr = fopen(file_path, "r");
 

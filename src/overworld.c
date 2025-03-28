@@ -73,7 +73,7 @@ int overworld_update(overworld_t* overworld, char input)
 }
 
 
-void overworld_render(overworld_t* overworld)
+void overworld_render(overworld_t* overworld, HANDLE* console_handle)
 {
     scene_t* scene_ptr = &overworld->scene;
 
@@ -82,63 +82,14 @@ void overworld_render(overworld_t* overworld)
 
             tile_data_t* tile = get_tile_data(get_tile_id(scene_ptr, x, y));
 
-            int bold_num = tile->bold ? 1 : 0;
-            int hi_num = tile->high_intensity ? 9 : 3;
-            switch(tile->text_color) {
-            case COLOR_WHITE:
-                printf("\e[%d;%d7m", bold_num, hi_num);
-                break;
-            case COLOR_RED:
-                printf("\e[%d;%d1m", bold_num, hi_num);
-                break;
-            case COLOR_YELLOW:
-                printf("\e[%d;%d3m", bold_num, hi_num);
-                break;
-            case COLOR_BLUE:
-                printf("\e[%d;%d4m", bold_num, hi_num);
-                break;
-            case COLOR_GREEN:
-                printf("\e[%d;%d2m", bold_num, hi_num);
-                break;
-            case COLOR_BLACK:
-                printf("\e[%d;%d0m", bold_num, hi_num);
-                break;
-            case COLOR_CYAN:
-                printf("\e[%d;%d6m", bold_num, hi_num);
-                break;
-            case COLOR_MAGENTA:
-                printf("\e[%d;%d5m", bold_num, hi_num);
-                break;
-            }
+            //int bold_num = tile->bold ? 1 : 0;
+            //int hi_num = tile->high_intensity ? 9 : 3;
+            int tcol = colorToConsoleHex(tile->text_color);
+            int bcol = colorToConsoleHex(tile->bg_color) << 1;
 
-            switch(tile->bg_color) {
-            case COLOR_WHITE:
-                printf("\e[47m");
-                break;
-            case COLOR_RED:
-                printf("\e[41m");
-                break;
-            case COLOR_YELLOW:
-                printf("\e[43m");
-                break;
-            case COLOR_BLUE:
-                printf("\e[44m");
-                break;
-            case COLOR_GREEN:
-                printf("\e[42m");
-                break;
-            case COLOR_BLACK:
-                printf("\e[40m");
-                break;
-            case COLOR_CYAN:
-                printf("\e[46m");
-                break;
-            case COLOR_MAGENTA:
-                printf("\e[45m");
-                break;
-            }
-
-            printf("%s\e[0m", tile->icon);
+            SetConsoleTextAttribute(*console_handle, tcol + bcol);
+            printf("%s", tile->icon);
+            SetConsoleTextAttribute(*console_handle, 0x07);
         }
         printf("\n");
     }
