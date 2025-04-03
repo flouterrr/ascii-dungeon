@@ -42,7 +42,7 @@ void game_run(HANDLE console_handle)
     while (input != 'q') {
 
         // update
-        int update_return_code;
+        int update_return_code = 0;
         switch (get_current_game_state()) {
 
         case GAME_STATE_OVERWORLD:
@@ -62,26 +62,27 @@ void game_run(HANDLE console_handle)
             break;
 
         case GAME_STATE_GAMEOVER:
+            update_return_code = gameover_update(&s_game.gameover, input);
             break;
         }
 
         // render
         if (update_return_code == 0 || input == '\n') {
             system("cls");
-            //printf("\e[1;1H\e[2J");
+            display_clear();
             switch (get_current_game_state()) {
             case GAME_STATE_OVERWORLD:
-                overworld_render(&s_game.overworld, &console_handle);
+                overworld_render(&s_game.overworld);
                 break;
             case GAME_STATE_BATTLE:
-                battle_render(&s_game.battle, &console_handle);
+                battle_render(&s_game.battle);
                 break;
             case GAME_STATE_GAMEOVER:
-                gameover_render(&s_game.gameover, &console_handle);
+                gameover_render(&s_game.gameover);
                 break;
             }
+            display_print(console_handle);
         }
-
         input = getch();
     }
 }

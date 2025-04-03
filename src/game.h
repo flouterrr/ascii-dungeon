@@ -5,6 +5,7 @@
 #include <Windows.h>
 
 #include "utils.h"
+#include "display.h"
 #include "gamestates/battle.h"
 #include "gamestates/overworld.h"
 #include "gamestates/gameover.h"

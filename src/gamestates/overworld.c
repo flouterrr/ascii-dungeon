@@ -73,22 +73,15 @@ int overworld_update(overworld_t* overworld, char input)
 }
 
 
-void overworld_render(overworld_t* overworld, HANDLE* console_handle)
+void overworld_render(overworld_t* overworld)
 {
     scene_t* scene_ptr = &overworld->scene;
 
     for(int y = 0; y < GRID_HEIGHT; y++) {
         for(int x = 0; x < GRID_WIDTH; x++) {
-
             tile_data_t* tile = get_tile_data(scene_get_tile_id(scene_ptr, x, y));
-
-            int tcol = colorToConsoleHex(tile->text_color);
-            int bcol = colorToConsoleHex(tile->bg_color) << 1;
-
-            SetConsoleTextAttribute(*console_handle, tcol + bcol);
-            printf("%s", tile->icon);
-            SetConsoleTextAttribute(*console_handle, 0x07);
+            display_set_cell(x * 2, y, tile->icon[0], tile->text_color, tile->bg_color);
+            display_set_cell((x * 2) + 1, y, tile->icon[1], tile->text_color, tile->bg_color);
         }
-        printf("\n");
     }
 }

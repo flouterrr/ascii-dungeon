@@ -17,7 +17,11 @@ int gameover_update(gameover_t* gameover, char input)
 }
 
 
-void gameover_render(gameover_t* gameover, HANDLE console_handle)
+void gameover_render(gameover_t* gameover)
 {
-
+	display_render_sprite(
+		SPRITE_GAMEOVER, 
+		DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, true,
+		COLOR_WHITE, COLOR_BLACK
+	);
 }

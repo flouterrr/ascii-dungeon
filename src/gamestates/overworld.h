@@ -5,6 +5,7 @@
 
 #include "scene.h"
 #include "utils.h"
+#include "display.h"
 
 
 typedef struct {
@@ -22,7 +23,7 @@ typedef struct {
 
 
 int overworld_update(overworld_t* overworld, char input);
-void overworld_render(overworld_t* overworld, HANDLE console_handle);
+void overworld_render(overworld_t* overworld);
 
 
 #endif // OVERWORLD_H

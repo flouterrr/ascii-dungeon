@@ -186,32 +186,45 @@ int battle_update(battle_t* battle, char input)
 }
 
 
-void battle_render(battle_t* battle, HANDLE console_handle)
+void battle_render(battle_t* battle)
 {
-    printf("\n\n");
-
     // enemy sprite
-    if(battle->enemy->sprite.large_sprite) {
-        for(int i = 0; i < 8; i++) {
-            printf("\t%s\n", sprite_get_row(&battle->enemy->sprite, i));
-        }
-    } else {
-        for(int i = 0; i < 4; i++) {
-            printf("\t\t%s\n", sprite_get_row(&battle->enemy->sprite, i));
-        }
-    }
+    display_render_sprite(
+        battle->enemy->sprite_id, 
+        DISPLAY_WIDTH / 2, 8, true, 
+        COLOR_WHITE, COLOR_BLACK
+    );
 
     // enemy info
-    printf("\n\t\t%s  HP:%d\n", battle->enemy->name, battle->enemy_cur_hp);
+    display_render_text(
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 11, true, 
+        COLOR_WHITE, COLOR_BLACK, 
+        "%s HP:%d", battle->enemy->name, battle->enemy_cur_hp
+    );
 
     // player info
-    printf("\n\n\t\tYOUR HP:%d\n", battle->player_cur_hp);
+    display_render_text(
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 8, true,
+        COLOR_WHITE, COLOR_BLACK,
+        "YOUR HP:%d", battle->player_cur_hp
+    );
 
     // player choices
-    if(battle->event_queue_length == 0) {
-        printf("\n\t[A]ttack  [D]efend  [R]un\n");
+    if (battle->event_queue_length == 0) 
+    {
+        display_render_text(
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 6, true,
+            COLOR_WHITE, COLOR_BLACK,
+            "[A]ttack [D]efend [R]un"
+        );
+    }
+    else
+    {
+        display_render_text(
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 5, true,
+            COLOR_WHITE, COLOR_BLACK,
+            "\n%s\n", battle->msg
+        );
     }
 
-    // battle message
-    printf("\n%s\n", battle->msg);
 }
