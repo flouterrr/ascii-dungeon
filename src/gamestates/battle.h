@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <Windows.h>
 
 #include "database.h"
 #include "defines.h"
@@ -45,7 +46,7 @@ typedef struct {
 
 
 int battle_update(battle_t* battle, char input);
-void battle_render(battle_t* battle);
+void battle_render(battle_t* battle, HANDLE console_handle);
 
 void battle_add_event(battle_t* battle, int event_id, int num1);
 void battle_add_event_msg(battle_t* battle, const char* msg, ...);

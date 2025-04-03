@@ -38,7 +38,7 @@ int overworld_update(overworld_t* overworld, char input)
 
     for(int y = 0; y < GRID_HEIGHT; y++) {
         for(int x = 0; x < GRID_WIDTH; x++) {
-            if(get_tile_id(scene_ptr, x, y) == TILE_PLAYER) {
+            if(scene_get_tile_id(scene_ptr, x, y) == TILE_PLAYER) {
                 tile_actions[tile_action_counter].tile_x = x;
                 tile_actions[tile_action_counter].tile_y = y;
                 tile_actions[tile_action_counter].move_x = p_x;
@@ -54,18 +54,18 @@ int overworld_update(overworld_t* overworld, char input)
         }
 
         if(ta->move_x != 0 || ta->move_y != 0) {
-            int tile_id = get_tile_id(scene_ptr, ta->tile_x, ta->tile_y);
+            int tile_id = scene_get_tile_id(scene_ptr, ta->tile_x, ta->tile_y);
             int new_x = ta->tile_x + ta->move_x;
             int new_y = ta->tile_y + ta->move_y;
 
-            int colliding_tile_id = get_tile_id(scene_ptr, new_x, new_y);
+            int colliding_tile_id = scene_get_tile_id(scene_ptr, new_x, new_y);
             if(colliding_tile_id == TILE_WALL) continue;
             else if(colliding_tile_id == TILE_ENEMY) {
                 start_battle();
             }
 
-            set_tile(scene_ptr, new_x, new_y, tile_id);
-            set_tile(scene_ptr, ta->tile_x, ta->tile_y, TILE_AIR);
+            scene_set_tile(scene_ptr, new_x, new_y, tile_id);
+            scene_set_tile(scene_ptr, ta->tile_x, ta->tile_y, TILE_AIR);
         }
     }
 
@@ -80,7 +80,7 @@ void overworld_render(overworld_t* overworld, HANDLE* console_handle)
     for(int y = 0; y < GRID_HEIGHT; y++) {
         for(int x = 0; x < GRID_WIDTH; x++) {
 
-            tile_data_t* tile = get_tile_data(get_tile_id(scene_ptr, x, y));
+            tile_data_t* tile = get_tile_data(scene_get_tile_id(scene_ptr, x, y));
 
             //int bold_num = tile->bold ? 1 : 0;
             //int hi_num = tile->high_intensity ? 9 : 3;

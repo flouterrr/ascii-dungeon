@@ -32,7 +32,7 @@ typedef struct {
 database_t g_database;
 
 
-void init_database();
+void database_init();
 const tile_data_t* get_tile_data(int tile_id);
 const enemy_data_t* get_enemy_data(int enemy_id);
 void database_setup_tile(int tile_id, const char* icon, int text_color, int bg_color, bool bold);

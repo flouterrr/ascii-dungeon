@@ -21,11 +21,8 @@ void database_setup_enemy(int enemy_id, const char* name, int hp, int atk, bool 
 }
 
 
-void init_database()
+void database_init()
 {
-
-    // test line
-
     database_setup_tile(TILE_AIR, "  ", COLOR_WHITE, COLOR_BLACK, false);
     database_setup_tile(TILE_WALL, "[]", COLOR_WHITE, COLOR_BLACK, false);
     database_setup_tile(TILE_PLAYER, "$@", COLOR_GREEN, COLOR_BLACK, true);

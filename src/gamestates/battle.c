@@ -96,7 +96,7 @@ int battle_init(battle_t* battle, int enemy_id)
 int battle_update(battle_t* battle, char input)
 {
     if(battle->event_queue_length > 0) {
-        if(input != '\r') return 1;
+        if(input != '\r' && input != ' ') return 1;
 
         battle_run_event_queue(battle);
 
@@ -186,7 +186,7 @@ int battle_update(battle_t* battle, char input)
 }
 
 
-void battle_render(battle_t* battle)
+void battle_render(battle_t* battle, HANDLE console_handle)
 {
     printf("\n\n");
 
