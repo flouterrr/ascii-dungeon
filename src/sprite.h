@@ -8,11 +8,15 @@
 
 
 typedef struct {
-    bool large_sprite;
-    char data[8 * 32];
+    //bool large_sprite;
+    //char data[8 * 32];
+    char* data;
+    int width, height;
 } sprite_t;
 
 sprite_t load_sprite(const char* filename, bool large);
+sprite_t* load_new_sprite(const char* filename);
+void free_sprite(sprite_t*);
 char* sprite_get_row(sprite_t* sprite, int row);
 
 #endif // SPRITE_H

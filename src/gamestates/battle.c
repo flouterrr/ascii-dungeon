@@ -186,7 +186,7 @@ int battle_update(battle_t* battle, char input)
 }
 
 
-void battle_render(battle_t* battle)
+void battle_render(battle_t* battle, HANDLE console_handle)
 {
     printf("\n\n");
 

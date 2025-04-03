@@ -3,15 +3,87 @@
 
 static game_t s_game;
 
+
 game_t* get_game()
 {
     return &s_game;
 }
 
-void init_game()
+
+void game_init()
 {
     srand(time(NULL));
     s_game.cur_game_state = GAME_STATE_OVERWORLD;
+}
+
+
+void game_run(HANDLE console_handle)
+{
+    scene_t* scene_ptr = &s_game.overworld.scene;
+
+    scene_clear(scene_ptr);
+
+    scene_make_room(scene_ptr, 1, 1, 12, 8);
+    scene_make_room(scene_ptr, 17, 15, 18, 6);
+    scene_make_room(scene_ptr, 28, 5, 10, 8);
+    scene_make_room(scene_ptr, 3, 10, 12, 10);
+    scene_make_hallway(scene_ptr, 13, 4, 20, 15);
+    scene_make_hallway(scene_ptr, 22, 8, 28, 8);
+    scene_make_hallway(scene_ptr, 15, 12, 19, 12);
+
+    scene_set_tile(scene_ptr, 4, 4, TILE_PLAYER);
+    scene_set_tile(scene_ptr, 7, 5, TILE_ENEMY);
+
+    printf("Initialization finished, press any key.\n");
+    getch();
+
+    // game loop
+    char input = '\n';
+    while (input != 'q') {
+
+        // update
+        int update_return_code;
+        switch (get_current_game_state()) {
+
+        case GAME_STATE_OVERWORLD:
+            update_return_code = overworld_update(&s_game.overworld, input);
+            break;
+
+        case GAME_STATE_BATTLE:
+            update_return_code = battle_update(&s_game.battle, input);
+            switch (s_game.battle.status) {
+            case BATTLE_STATUS_WON:
+                s_game.cur_game_state = GAME_STATE_OVERWORLD;
+                break;
+            case BATTLE_STATUS_LOST:
+                s_game.cur_game_state = GAME_STATE_GAMEOVER;
+                break;
+            }
+            break;
+
+        case GAME_STATE_GAMEOVER:
+            break;
+        }
+
+        // render
+        if (update_return_code == 0 || input == '\n') {
+            system("cls");
+            //printf("\e[1;1H\e[2J");
+            switch (get_current_game_state()) {
+            case GAME_STATE_OVERWORLD:
+                overworld_render(&s_game.overworld, &console_handle);
+                break;
+            case GAME_STATE_BATTLE:
+                battle_render(&s_game.battle, &console_handle);
+                break;
+            case GAME_STATE_GAMEOVER:
+                gameover_render(&s_game.gameover, &console_handle);
+                break;
+            }
+        }
+
+        input = getch();
+    }
 }
 
 
