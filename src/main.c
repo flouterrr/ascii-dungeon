@@ -20,11 +20,11 @@ int main()
     SetConsoleCursorInfo(console_handle, &cursor_info);
     SetConsoleTitle("ASCII Dungeon");
 
-
     init_database();
     init_game();
 
-    scene_t* scene_ptr = &g_game.overworld.scene;
+    game_t* game_ptr = get_game();
+    scene_t* scene_ptr = &game_ptr->overworld.scene;
 
     clear_scene(scene_ptr);
 
@@ -47,22 +47,22 @@ int main()
     while(input != 'q') {
 
         // update
-        int update_return_code;
+        int update_return_code = 0;
         switch(get_current_game_state()) {
 
         case GAME_STATE_OVERWORLD:
-            update_return_code = overworld_update(&g_game.overworld, input);
+            update_return_code = overworld_update(&game_ptr->overworld, input);
             break;
 
         case GAME_STATE_BATTLE:
-            update_return_code = battle_update(&g_game.battle, input);
+            update_return_code = battle_update(&game_ptr->battle, input);
 
-            switch(g_game.battle.status) {
+            switch(game_ptr->battle.status) {
             case BATTLE_STATUS_WON:
-                g_game.cur_game_state = GAME_STATE_OVERWORLD;
+                game_ptr->cur_game_state = GAME_STATE_OVERWORLD;
                 break;
             case BATTLE_STATUS_LOST:
-                g_game.cur_game_state = GAME_STATE_OVERWORLD;
+                game_ptr->cur_game_state = GAME_STATE_OVERWORLD;
                 break;
             }
 
@@ -75,10 +75,10 @@ int main()
             //printf("\e[1;1H\e[2J");
             switch(get_current_game_state()) {
             case GAME_STATE_OVERWORLD:
-                overworld_render(&g_game.overworld, &console_handle);
+                overworld_render(&game_ptr->overworld, &console_handle);
                 break;
             case GAME_STATE_BATTLE:
-                battle_render(&g_game.battle);
+                battle_render(&game_ptr->battle);
                 break;
             }
         }

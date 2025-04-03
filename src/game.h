@@ -14,7 +14,7 @@ typedef struct {
     overworld_t overworld;
 } game_t;
 
-game_t g_game;
+game_t* get_game(void);
 
 void init_game();
 int get_current_game_state();

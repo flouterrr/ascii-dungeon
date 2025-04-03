@@ -82,8 +82,6 @@ void overworld_render(overworld_t* overworld, HANDLE* console_handle)
 
             tile_data_t* tile = get_tile_data(get_tile_id(scene_ptr, x, y));
 
-            //int bold_num = tile->bold ? 1 : 0;
-            //int hi_num = tile->high_intensity ? 9 : 3;
             int tcol = colorToConsoleHex(tile->text_color);
             int bcol = colorToConsoleHex(tile->bg_color) << 1;
 
