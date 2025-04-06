@@ -29,10 +29,12 @@ typedef struct {
 typedef struct {
     enemy_data_t* enemy;
     int enemy_cur_hp;
+    int enemy_last_dmg_taken;
     bool enemy_dead;
     battle_action_t enemy_ba;
 
     int player_cur_hp;
+    int player_last_dmg_taken;
     bool player_dead;
     battle_action_t player_ba;
 

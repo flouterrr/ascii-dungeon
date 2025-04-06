@@ -50,10 +50,12 @@ void battle_run_event_queue(battle_t* battle)
 
         case BE_ENEMY_TAKE_DMG:
             battle->enemy_cur_hp -= event->num1;
+            battle->enemy_last_dmg_taken = event->num1;
             break;
 
         case BE_PLAYER_TAKE_DMG:
             battle->player_cur_hp -= event->num1;
+            battle->player_last_dmg_taken = event->num1;
             break;
 
         case BE_PLAYER_RUN_AWAY:
@@ -95,6 +97,9 @@ int battle_init(battle_t* battle, int enemy_id)
 
 int battle_update(battle_t* battle, char input)
 {
+    battle->enemy_last_dmg_taken = 0;
+    battle->player_last_dmg_taken = 0;
+
     if(battle->event_queue_length > 0) {
         if(input != '\r' && input != ' ') return 1;
 
@@ -196,6 +201,13 @@ void battle_render(battle_t* battle)
     );
 
     // enemy info
+    bool show_dmg = battle->enemy_last_dmg_taken > 0;
+    char* dmg_text[20];
+    if (show_dmg)
+    {
+        snprintf(dmg_text, 20, "(-%d)", battle->enemy_last_dmg_taken);
+    }
+
     display_render_box(
         DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 10, true, 30, 3, true,
         COLOR_GREY, COLOR_BLACK
@@ -203,10 +215,18 @@ void battle_render(battle_t* battle)
     display_render_text(
         DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 10, true, 
         COLOR_WHITE, COLOR_BLACK,
-        "%s HP:%d", battle->enemy->name, battle->enemy_cur_hp
+        "%s HP:%d %s", 
+        battle->enemy->name,
+        battle->enemy_cur_hp,
+        show_dmg ? dmg_text : ""
     );
 
     // player info
+    show_dmg = battle->player_last_dmg_taken > 0;
+    if (show_dmg)
+    {
+        snprintf(dmg_text, 20, "(-%d)", battle->player_last_dmg_taken);
+    }
     display_render_box(
         DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 7, true, 30, 3, true,
         COLOR_GREY, COLOR_BLACK
@@ -214,7 +234,7 @@ void battle_render(battle_t* battle)
     display_render_text(
         DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 7, true,
         COLOR_WHITE, COLOR_BLACK,
-        "YOUR HP:%d", battle->player_cur_hp
+        "YOUR HP:%d %s", battle->player_cur_hp, show_dmg ? dmg_text : ""
     );
 
     // player choices
