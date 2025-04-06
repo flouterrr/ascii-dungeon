@@ -37,6 +37,7 @@ void game_init()
 
 void game_run()
 {
+    display_draw_border();
     // game loop
     char input = '\n';
     while (input != 'q') {
@@ -68,7 +69,6 @@ void game_run()
 
         // render
         if (update_return_code == 0 || input == '\n') {
-            system("cls");
             display_clear();
             switch (get_current_game_state()) {
             case GAME_STATE_OVERWORLD:
@@ -81,7 +81,7 @@ void game_run()
                 gameover_render(&s_game.gameover);
                 break;
             }
-            display_print();
+            display_refresh();
         }
         input = getch();
     }

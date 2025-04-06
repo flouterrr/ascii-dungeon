@@ -1,6 +1,35 @@
 #include "utils.h"
 
 
+static char s_dec_line_chars[DEC_LINE_COUNT] = {
+    DEC_LINE_H,         // 0
+    DEC_LINE_V,         // 1
+    DEC_LINE_TL,        // 2
+    DEC_LINE_TR,        // 3
+    DEC_LINE_BL,        // 4
+    DEC_LINE_BR,        // 5
+    DEC_LINE_T_RIGHT,   // 6
+    DEC_LINE_T_LEFT,    // 7
+    DEC_LINE_T_UP,      // 8
+    DEC_LINE_T_DOWN,    // 9
+    DEC_LINE_CROSS      // 10
+};
+
+static unsigned char s_dec_line_bits[DEC_LINE_COUNT] = {
+    0b00001010,         // 0
+    0b00000101,         // 1
+    0b00000110,         // 2
+    0b00001100,         // 3
+    0b00000011,         // 4
+    0b00001001,         // 5
+    0b00000111,         // 6
+    0b00001101,         // 7
+    0b00001011,         // 8
+    0b00001110,         // 9
+    0b00001111          // 10
+};
+
+
 int randint(int n)
 {
     if((n - 1) == RAND_MAX) return rand();
@@ -15,61 +44,29 @@ int randint(int n)
     return x % n;
 }
 
-
-int colorToConsoleHex(int color_id)
+unsigned char dec_line_char_to_line_bits(char c)
 {
-    int hex = 0x00;
-    switch (color_id)
+    unsigned char b = 0;
+    for (int i = 0; i < DEC_LINE_COUNT; i++)
     {
-    case COLOR_WHITE:
-        hex = 0x07;
-        break;
-    case COLOR_BRIGHT_WHITE:
-        hex = 0x0F;
-        break;
-    case COLOR_BLACK:
-        hex = 0x00;
-        break;
-    case COLOR_GREY:
-        hex = 0x08;
-        break;
-    case COLOR_RED:
-        hex = 0x04;
-        break;
-    case COLOR_LIGHT_RED:
-        hex = 0x0C;
-        break;
-    case COLOR_YELLOW:
-        hex = 0x06;
-        break;
-    case COLOR_LIGHT_YELLOW:
-        hex = 0x0E;
-        break;
-    case COLOR_BLUE:
-        hex = 0x01;
-        break;
-    case COLOR_LIGHT_BLUE:
-        hex = 0x09;
-        break;
-    case COLOR_GREEN:
-        hex = 0x02;
-        break;
-    case COLOR_LIGHT_GREEN:
-        hex = 0x0A;
-        break;
-    case COLOR_CYAN:
-        hex = 0x03;
-        break;
-    case COLOR_LIGHT_CYAN:
-        hex = 0x0B;
-        break;
-    case COLOR_MAGENTA:
-        hex = 0x05;
-        break;
-    case COLOR_LIGHT_MAGENTA:
-        hex = 0x0D;
-        break;
+        if (s_dec_line_chars[i] == c)
+        {
+            b = s_dec_line_bits[i];
+        }
     }
+    return b;
+}
 
-    return hex;
+
+char line_bits_to_dec_line_char(unsigned char b)
+{
+    char c = '\0';
+    for (int i = 0; i < DEC_LINE_COUNT; i++)
+    {
+        if (s_dec_line_bits[i] == b)
+        {
+            c = s_dec_line_chars[i];
+        }
+    }
+    return c;
 }

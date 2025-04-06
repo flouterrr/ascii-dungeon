@@ -1,10 +1,17 @@
 #include "console.h"
 #include <stdio.h>
 
+
+#define ESC "\x1b"
+
 static HANDLE s_out_handle;
 static HANDLE s_in_handle;
 
-#define ESC "\x1b"
+static COLOR_T cur_fg_color = NULL;
+static COLOR_T cur_bg_color = NULL;
+
+static CONSOLE_CHAR_MODE_T cur_char_mode = NULL;
+
 
 void console_init()
 {
@@ -32,6 +39,9 @@ void console_init()
 
     // switch to alternate screen buffer
     printf(ESC "[?1049h");
+
+    // set console width
+    printf(ESC "[?3l");
 }
 
 
@@ -47,13 +57,57 @@ void console_cleanup()
 
 void console_set_color(COLOR_T fg_color, COLOR_T bg_color)
 {
-    printf(ESC "[%dm", fg_color);
-    printf(ESC "[%dm", bg_color + 10);
+    if (cur_fg_color != fg_color)
+    {
+        printf(ESC "[%dm", fg_color);
+        cur_fg_color = fg_color;
+    }
+
+    if (cur_bg_color != bg_color)
+    {
+        printf(ESC "[%dm", bg_color + 10);
+        cur_bg_color = bg_color;
+    }
+    
 }
+
+void console_set_char_mode(CONSOLE_CHAR_MODE_T mode)
+{
+    if (cur_char_mode != mode)
+    {
+        printf(ESC "(%c", mode ? '0' : 'B');
+        cur_char_mode = mode;
+    }
+}
+
+
+void console_write_character(char c, CONSOLE_CHAR_MODE_T mode, COLOR_T fg_color, COLOR_T bg_color)
+{
+    console_set_color(fg_color, bg_color);
+    console_set_char_mode(mode);
+    printf("%c", c);
+}
+
+
+void console_replace_char(int x, int y, char c, CONSOLE_CHAR_MODE_T mode, COLOR_T fg_color, COLOR_T bg_color)
+{
+    printf(ESC "[%d;%df", y + 1, x + 1);
+    console_set_color(fg_color, bg_color);
+    console_set_char_mode(mode);
+    printf("%c", c);
+}
+
+
+void console_clear()
+{
+    printf(ESC "[2J" ESC "[H");
+}
+
 
 void console_reset_color()
 {
     printf(ESC "[0m");
 }
+
 
 #undef ESC

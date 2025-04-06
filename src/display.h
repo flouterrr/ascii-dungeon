@@ -26,20 +26,24 @@ typedef struct {
 	char c;
 	COLOR_T fg_color;
 	COLOR_T bg_color;
+	bool dec_line;
 } display_cell_t;
 
 
 typedef struct {
 	display_cell_t cells[DISPLAY_SIZE];
+	display_cell_t displayed_cells[DISPLAY_SIZE];
 } display_t;
 
 
 void display_init();
-void display_set_cell(int x, int y, char c, COLOR_T fg_color, COLOR_T bg_color);
+void display_set_cell(int x, int y, char c, COLOR_T fg_color, COLOR_T bg_color, bool dec_line);
 void display_clear();
 void display_render_sprite(int sprite_id, int pos_x, int pos_y, bool origin_center, COLOR_T fg_color, COLOR_T bg_color);
 void display_render_text(int pos_x, int pos_y, bool origin_center, COLOR_T fg_color, COLOR_T bg_color, const char* text, ...);
-void display_print();
+void display_render_box(int pos_x, int pos_y, bool origin_center, int width, int height, bool fill, COLOR_T fg_color, COLOR_T bg_color);
+void display_refresh();
+void display_draw_border();
 
 
 #endif // DISPLAY_H

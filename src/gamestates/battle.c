@@ -196,15 +196,23 @@ void battle_render(battle_t* battle)
     );
 
     // enemy info
+    display_render_box(
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 10, true, 30, 3, true,
+        COLOR_GREY, COLOR_BLACK
+    );
     display_render_text(
-        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 11, true, 
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 10, true, 
         COLOR_WHITE, COLOR_BLACK,
         "%s HP:%d", battle->enemy->name, battle->enemy_cur_hp
     );
 
     // player info
+    display_render_box(
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 7, true, 30, 3, true,
+        COLOR_GREY, COLOR_BLACK
+    );
     display_render_text(
-        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 8, true,
+        DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 7, true,
         COLOR_WHITE, COLOR_BLACK,
         "YOUR HP:%d", battle->player_cur_hp
     );
@@ -212,16 +220,24 @@ void battle_render(battle_t* battle)
     // player choices
     if (battle->event_queue_length == 0) 
     {
+        display_render_box(
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 5, true, 30, 3, true,
+            COLOR_GREY, COLOR_BLACK
+        );
         display_render_text(
-            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 6, true,
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 5, true,
             COLOR_WHITE, COLOR_BLACK,
             "[A]ttack [D]efend [R]un"
         );
     }
     else
     {
+        display_render_box(
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 3, true, 50, 5, true,
+            COLOR_GREY, COLOR_BLACK
+        );
         display_render_text(
-            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 5, true,
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 3, true,
             COLOR_WHITE, COLOR_BLACK,
             "\n%s\n", battle->msg
         );
