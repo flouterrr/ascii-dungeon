@@ -80,8 +80,8 @@ void overworld_render(overworld_t* overworld)
     for(int y = 0; y < GRID_HEIGHT; y++) {
         for(int x = 0; x < GRID_WIDTH; x++) {
             tile_data_t* tile = get_tile_data(scene_get_tile_id(scene_ptr, x, y));
-            display_set_cell(x * 2, y, tile->icon[0], tile->text_color, tile->bg_color);
-            display_set_cell((x * 2) + 1, y, tile->icon[1], tile->text_color, tile->bg_color);
+            display_set_cell(x * 2, y, tile->icon[0], tile->fg_color, tile->bg_color);
+            display_set_cell((x * 2) + 1, y, tile->icon[1], tile->fg_color, tile->bg_color);
         }
     }
 }

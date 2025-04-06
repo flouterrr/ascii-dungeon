@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include <stdlib.h>
-#include <Windows.h>
 
 #include "utils.h"
 #include "display.h"
@@ -21,7 +20,7 @@ typedef struct {
 game_t* get_game(void);
 
 void game_init();
-void game_run(HANDLE console_handle);
+void game_run();
 int get_current_game_state();
 void start_battle();
 

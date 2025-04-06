@@ -19,6 +19,7 @@ enum ENUM_TILES {
 };
 
 
+/*
 enum ENUM_COLORS {
     COLOR_WHITE,
     COLOR_BRIGHT_WHITE,
@@ -38,7 +39,7 @@ enum ENUM_COLORS {
     COLOR_LIGHT_MAGENTA,
     NUM_COLOR
 };
-
+*/
 
 enum ENUM_SPRITES {
     SPRITE_CAT,

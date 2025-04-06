@@ -198,7 +198,7 @@ void battle_render(battle_t* battle)
     // enemy info
     display_render_text(
         DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - 11, true, 
-        COLOR_WHITE, COLOR_BLACK, 
+        COLOR_WHITE, COLOR_BLACK,
         "%s HP:%d", battle->enemy->name, battle->enemy_cur_hp
     );
 

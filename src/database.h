@@ -6,13 +6,13 @@
 
 #include "enums.h"
 #include "sprite.h"
+#include "color.h"
 
 
 typedef struct {
     const char* icon; // 2 chars wide
-    int text_color;
-    int bg_color;
-    bool bold;
+    COLOR_T fg_color;
+    COLOR_T bg_color;
 } tile_data_t;
 
 
@@ -37,7 +37,7 @@ void database_init();
 const tile_data_t* get_tile_data(int tile_id);
 const enemy_data_t* get_enemy_data(int enemy_id);
 const sprite_t* get_sprite(int sprite_id);
-void database_setup_tile(int tile_id, const char* icon, int text_color, int bg_color, bool bold);
+void database_setup_tile(int tile_id, const char* icon, COLOR_T fg_color, COLOR_T bg_color);
 void database_setup_sprite(int sprite_id, const char* sprite_filename);
 void database_setup_enemy(int enemy_id, const char* name, int hp, int atk, int sprite_id);
 void database_cleanup();

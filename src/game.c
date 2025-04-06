@@ -14,11 +14,7 @@ void game_init()
 {
     srand(time(NULL));
     s_game.cur_game_state = GAME_STATE_OVERWORLD;
-}
 
-
-void game_run(HANDLE console_handle)
-{
     scene_t* scene_ptr = &s_game.overworld.scene;
 
     scene_clear(scene_ptr);
@@ -36,7 +32,11 @@ void game_run(HANDLE console_handle)
 
     printf("Initialization finished, press any key.\n");
     getch();
+}
 
+
+void game_run()
+{
     // game loop
     char input = '\n';
     while (input != 'q') {
@@ -81,7 +81,7 @@ void game_run(HANDLE console_handle)
                 gameover_render(&s_game.gameover);
                 break;
             }
-            display_print(console_handle);
+            display_print();
         }
         input = getch();
     }

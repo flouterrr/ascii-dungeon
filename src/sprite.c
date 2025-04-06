@@ -44,6 +44,7 @@ sprite_t load_new_sprite(const char* filename)
     char read_char = '\0';
     int max_width = 0;
     int cur_line_width = 0;
+    int cur_line_width_real = 0;
     int max_height = 0;
 
     while (true)
@@ -58,11 +59,16 @@ sprite_t load_new_sprite(const char* filename)
         {
             max_height++;
             cur_line_width = 0;
+            cur_line_width_real = 0;
         }
         else
         {
             cur_line_width++;
-            max_width = cur_line_width > max_width ? cur_line_width : max_width;
+            if (read_char != ' ')
+            {
+                cur_line_width_real = cur_line_width;
+            }
+            max_width = cur_line_width_real > max_width ? cur_line_width_real : max_width;
         }
     }
 

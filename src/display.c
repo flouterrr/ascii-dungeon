@@ -1,7 +1,14 @@
 #include "display.h"
+#include "console.h"
 
 
 static display_t s_display;
+
+static display_cell_t s_border_cell = {
+	.c = ':',
+	.fg_color = COLOR_WHITE,
+	.bg_color = COLOR_BLACK,
+};
 
 
 void display_init()
@@ -16,7 +23,7 @@ display_cell_t* display_get_cell(int x, int y)
 }
 
 
-void display_set_cell(int x, int y, char c, int fg_color, int bg_color)
+void display_set_cell(int x, int y, char c, COLOR_T fg_color, COLOR_T bg_color)
 {
 	display_cell_t* cell = display_get_cell(x, y);
 	if (c == '\n' || c == EOF || c == '\r' || c == '\0')
@@ -44,7 +51,7 @@ void display_clear()
 }
 
 
-void display_render_sprite(int sprite_id, int pos_x, int pos_y, bool origin_center, int fg_color, int bg_color)
+void display_render_sprite(int sprite_id, int pos_x, int pos_y, bool origin_center, COLOR_T fg_color, COLOR_T bg_color)
 {
 	sprite_t* sprite = get_sprite(sprite_id);
 
@@ -69,7 +76,7 @@ void display_render_sprite(int sprite_id, int pos_x, int pos_y, bool origin_cent
 }
 
 
-void display_render_text(int pos_x, int pos_y, bool origin_center, int fg_color, int bg_color, const char* text, ...)
+void display_render_text(int pos_x, int pos_y, bool origin_center, COLOR_T fg_color, COLOR_T bg_color, const char* text, ...)
 {
 	va_list va_args;
 	va_start(va_args, text);
@@ -105,26 +112,25 @@ void display_render_text(int pos_x, int pos_y, bool origin_center, int fg_color,
 }
 
 
-void display_print(HANDLE console_handle)
+void display_print()
 {
 	for (int y = -1; y <= DISPLAY_HEIGHT; y++)
 	{
 		for (int x = -1; x <= DISPLAY_WIDTH; x++)
 		{
-			if (y == -1 || y == DISPLAY_HEIGHT || x == -1 || x == DISPLAY_WIDTH)
+			display_cell_t* cell;
+
+			if (y <= -1 || y >= DISPLAY_HEIGHT || x <= -1 || x >= DISPLAY_WIDTH)
 			{
-				printf(":");
+				cell = &s_border_cell;
 			}
 			else
 			{
-				display_cell_t* cell = display_get_cell(x, y);
-				int fg_hex = colorToConsoleHex(cell->fg_color);
-				int bg_hex = colorToConsoleHex(cell->bg_color) << 1;
-
-				SetConsoleTextAttribute(console_handle, fg_hex + bg_hex);
-				printf("%c", cell->c);
-				SetConsoleTextAttribute(console_handle, 0x07);
+				cell = display_get_cell(x, y);
 			}
+			console_set_color(cell->fg_color, cell->bg_color);
+			printf("%c", cell->c);
+			console_reset_color();
 		}
 		printf("\n");
 	}

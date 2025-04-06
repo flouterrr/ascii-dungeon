@@ -22,6 +22,6 @@ void gameover_render(gameover_t* gameover)
 	display_render_sprite(
 		SPRITE_GAMEOVER, 
 		DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, true,
-		COLOR_WHITE, COLOR_BLACK
+		COLOR_RED, COLOR_BLACK
 	);
 }

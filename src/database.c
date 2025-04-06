@@ -4,13 +4,12 @@
 static database_t s_database;
 
 
-void database_setup_tile(int tile_id, const char* icon, int text_color, int bg_color, bool bold)
+void database_setup_tile(int tile_id, const char* icon, COLOR_T fg_color, COLOR_T bg_color)
 {
     tile_data_t* t = &s_database.tiles[tile_id];
     t->icon = icon;
-    t->text_color = text_color;
+    t->fg_color = fg_color;
     t->bg_color = bg_color;
-    t->bold = bold;
 }
 
 
@@ -32,10 +31,10 @@ void database_setup_enemy(int enemy_id, const char* name, int hp, int atk, int s
 
 void database_init()
 {
-    database_setup_tile(TILE_AIR, "  ", COLOR_WHITE, COLOR_BLACK, false);
-    database_setup_tile(TILE_WALL, "[]", COLOR_WHITE, COLOR_BLACK, false);
-    database_setup_tile(TILE_PLAYER, "$@", COLOR_GREEN, COLOR_BLACK, true);
-    database_setup_tile(TILE_ENEMY, "$@", COLOR_RED, COLOR_BLACK, true);
+    database_setup_tile(TILE_AIR, "  ", COLOR_WHITE, COLOR_BLACK);
+    database_setup_tile(TILE_WALL, "[]", COLOR_WHITE, COLOR_BLACK);
+    database_setup_tile(TILE_PLAYER, "$@", COLOR_GREEN, COLOR_BLACK);
+    database_setup_tile(TILE_ENEMY, "$@", COLOR_RED, COLOR_BLACK);
 
     database_setup_sprite(SPRITE_CAT, "cat");
     database_setup_sprite(SPRITE_BAT, "bat");
