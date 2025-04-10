@@ -5,11 +5,17 @@
 #include "database.h"
 
 
-
 typedef struct {
     int x;
     int y;
     int id;
+    union {
+        struct {
+            int battle_id;
+            int move_x;
+            int move_y;
+        } enemy;
+    };
 } entity_t;
 
 
@@ -26,9 +32,11 @@ void scene_set_tile(scene_t* scene, int x, int y, int tile_id);
 void scene_make_room(scene_t* scene, int pos_x, int pos_y, int width, int height);
 void scene_make_hallway(scene_t* scene, int from_x, int from_y, int to_x, int to_y);
 
-void scene_add_entity(scene_t* scene, int entity_id, int x, int y);
+entity_t* scene_find_free_entity(scene_t* scene);
+entity_t* scene_add_entity(scene_t* scene, int entity_id, int x, int y);
 void scene_entity_update(scene_t* scene, entity_t* entity, char input);
-void scene_entity_move(scene_t* scene, entity_t* entity, int move_x, int move_y);
+void scene_entity_post_update(scene_t* scene, entity_t* entity, char input);
+bool scene_entity_move(scene_t* scene, entity_t* entity, int move_x, int move_y);
 
 
 #endif // SCENE_H

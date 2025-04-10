@@ -27,7 +27,22 @@ void game_init()
     scene_make_hallway(scene_ptr, 15, 12, 19, 12);
 
     scene_add_entity(scene_ptr, ENTITY_PLAYER, 4, 4);
-    scene_add_entity(scene_ptr, ENTITY_ENEMY, 7, 5);
+    {
+        entity_t* enemy = scene_add_entity(scene_ptr, ENTITY_ENEMY, 7, 5);
+        enemy->enemy.battle_id = ENEMY_GUNTER;
+        enemy->enemy.move_y = -1;
+    }
+
+    {
+        entity_t* enemy = scene_add_entity(scene_ptr, ENTITY_ENEMY, 9, 4);
+        enemy->enemy.battle_id = ENEMY_ORGALORG;
+    }
+
+    {
+        entity_t* enemy = scene_add_entity(scene_ptr, ENTITY_ENEMY, 5, 7);
+        enemy->enemy.battle_id = ENEMY_CAT;
+        enemy->enemy.move_x = 1;
+    }
 
     printf("Initialization finished, press any key.\n");
     getch();
@@ -93,8 +108,8 @@ int get_current_game_state()
 }
 
 
-void start_battle()
+void start_battle(int enemy_id)
 {
-    battle_init(&s_game.battle, randint(NUM_ENEMIES));
+    battle_init(&s_game.battle, enemy_id);
     s_game.cur_game_state = GAME_STATE_BATTLE;
 }

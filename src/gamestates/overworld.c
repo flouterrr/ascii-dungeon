@@ -13,6 +13,14 @@ int overworld_update(overworld_t* overworld, char input)
         }
     }
 
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        if (scene_ptr->entities[i].id != -1)
+        {
+            scene_entity_post_update(scene_ptr, &scene_ptr->entities[i], input);
+        }
+    }
+
     return 0;
 }
 

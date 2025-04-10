@@ -1,11 +1,14 @@
 #include "scene.h"
+#include "game.h"
+#include "utils.h"
 
 
 void scene_init(scene_t* scene)
 {
     for (int i = 0; i < MAX_ENTITIES; i++)
     {
-        scene->entities[i].id = -1;
+        entity_t* entity = &scene->entities[i];
+        entity->id = -1;
     }
 
     scene_clear(scene);
@@ -92,19 +95,37 @@ void scene_make_hallway(scene_t* scene, int from_x, int from_y, int to_x, int to
 }
 
 
-void scene_add_entity(scene_t* scene, int entity_id, int x, int y)
+entity_t* scene_find_free_entity(scene_t* scene)
 {
     for (int i = 0; i < MAX_ENTITIES; i++)
     {
         entity_t* entity = &scene->entities[i];
-        if (entity->id == -1)
-        {
-            entity->id = entity_id;
-            entity->x = x;
-            entity->y = y;
-            break;
-        }
+        if (entity->id == -1) return entity;
     }
+    return NULL;
+}
+
+
+entity_t* scene_add_entity(scene_t* scene, int entity_id, int x, int y)
+{
+    entity_t* entity = scene_find_free_entity(scene);
+    if (entity == NULL) return NULL;
+
+    entity->id = entity_id;
+    entity->x = x;
+    entity->y = y;
+
+    // variable initialization
+    switch (entity->id)
+    {
+    case ENTITY_ENEMY:
+        entity->enemy.battle_id = 0;
+        entity->enemy.move_x = 0;
+        entity->enemy.move_y = 0;
+        break;
+    }
+
+    return entity;
 }
 
 
@@ -121,24 +142,73 @@ void scene_entity_update(scene_t* scene, entity_t* entity, char input)
         break;
 
     case ENTITY_ENEMY:
+        bool move_successful = scene_entity_move(scene, entity, entity->enemy.move_x, entity->enemy.move_y);
+        if (!move_successful)
+        {
+            entity->enemy.move_x = -entity->enemy.move_x;
+            entity->enemy.move_y = -entity->enemy.move_y;
+            scene_entity_move(scene, entity, entity->enemy.move_x, entity->enemy.move_y);
+        }
         break;
     }
 }
 
 
-void scene_entity_move(scene_t* scene, entity_t* entity, int move_x, int move_y)
+void scene_entity_post_update(scene_t* scene, entity_t* entity, char input)
 {
-    if (move_x == 0 && move_y == 0) return;
+    switch (entity->id)
+    {
+    case ENTITY_PLAYER:
+        break;
+        
+    case ENTITY_ENEMY:
+        break;
+    }
+}
+
+
+void scene_entity_collision_resolve(scene_t* scene, entity_t* e1, entity_t* e2)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        if (e1->id == ENTITY_PLAYER && e2->id == ENTITY_ENEMY)
+        {
+            start_battle(e2->enemy.battle_id);
+        }
+
+        entity_t* temp = e2;
+        e2 = e1;
+        e1 = temp;
+    }
+}
+
+
+bool scene_entity_move(scene_t* scene, entity_t* entity, int move_x, int move_y)
+{
+    if (move_x == 0 && move_y == 0) return false;
 
     int new_x = entity->x + move_x;
     int new_y = entity->y + move_y;
     
     int colliding_tile_id = scene_get_tile_id(scene, new_x, new_y);
     tile_data_t* tile_data = get_tile_data(colliding_tile_id);
-    if (tile_data->solid) return;
+    if (tile_data->solid) return false;
+
+    // check for entity collision
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        entity_t* col_e = &scene->entities[i];
+        if (col_e->id == -1) continue;
+
+        if (col_e->x == new_x && col_e->y == new_y)
+        {
+            scene_entity_collision_resolve(scene, entity, col_e);
+        }
+    }
 
     entity->x = new_x;
     entity->y = new_y;
+    return true;
 }
 
 
