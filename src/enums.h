@@ -13,9 +13,14 @@ enum ENUM_GAME_STATES {
 enum ENUM_TILES {
     TILE_AIR,
     TILE_WALL,
-    TILE_PLAYER,
-    TILE_ENEMY,
     NUM_TILES
+};
+
+
+enum ENUM_ENTITIES {
+    ENTITY_PLAYER,
+    ENTITY_ENEMY,
+    NUM_ENTITIES
 };
 
 

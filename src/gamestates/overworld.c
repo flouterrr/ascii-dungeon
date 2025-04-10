@@ -5,67 +5,11 @@ int overworld_update(overworld_t* overworld, char input)
 {
     scene_t* scene_ptr = &overworld->scene;
 
-    int p_x = 0;
-    int p_y = 0;
-
-    switch(input) {
-    case 'w': // movement
-        p_y = -1;
-        break;
-    case 'a':
-        p_x = -1;
-        break;
-    case 's':
-        p_y = 1;
-        break;
-    case 'd':
-        p_x = 1;
-        break;
-
-    default:
-        return 1;
-    }
-
-    tile_action_t tile_actions[MAX_TILE_ACTIONS];
-    int tile_action_counter = 0;
-    for(int i = 0; i < MAX_TILE_ACTIONS; i++) {
-        tile_actions[i].tile_x = -1;
-        tile_actions[i].tile_y = -1;
-        tile_actions[i].move_x = 0;
-        tile_actions[i].move_y = 0;
-        tile_actions[i].change_tile_id = -1;
-    }
-
-    for(int y = 0; y < GRID_HEIGHT; y++) {
-        for(int x = 0; x < GRID_WIDTH; x++) {
-            if(scene_get_tile_id(scene_ptr, x, y) == TILE_PLAYER) {
-                tile_actions[tile_action_counter].tile_x = x;
-                tile_actions[tile_action_counter].tile_y = y;
-                tile_actions[tile_action_counter].move_x = p_x;
-                tile_actions[tile_action_counter].move_y = p_y;
-            }
-        }
-    }
-
-    for(int i = 0; i < MAX_TILE_ACTIONS; i++) {
-        tile_action_t* ta = &tile_actions[i];
-        if(ta->tile_x == -1 || ta->tile_y == -1) {
-            break;
-        }
-
-        if(ta->move_x != 0 || ta->move_y != 0) {
-            int tile_id = scene_get_tile_id(scene_ptr, ta->tile_x, ta->tile_y);
-            int new_x = ta->tile_x + ta->move_x;
-            int new_y = ta->tile_y + ta->move_y;
-
-            int colliding_tile_id = scene_get_tile_id(scene_ptr, new_x, new_y);
-            if(colliding_tile_id == TILE_WALL) continue;
-            else if(colliding_tile_id == TILE_ENEMY) {
-                start_battle();
-            }
-
-            scene_set_tile(scene_ptr, new_x, new_y, tile_id);
-            scene_set_tile(scene_ptr, ta->tile_x, ta->tile_y, TILE_AIR);
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        if (scene_ptr->entities[i].id != -1)
+        {
+            scene_entity_update(scene_ptr, &scene_ptr->entities[i], input);
         }
     }
 
@@ -77,11 +21,23 @@ void overworld_render(overworld_t* overworld)
 {
     scene_t* scene_ptr = &overworld->scene;
 
+    // render tiles
     for(int y = 0; y < GRID_HEIGHT; y++) {
         for(int x = 0; x < GRID_WIDTH; x++) {
             tile_data_t* tile = get_tile_data(scene_get_tile_id(scene_ptr, x, y));
-            display_set_cell(x * 2, y, tile->icon[0], tile->fg_color, tile->bg_color);
-            display_set_cell((x * 2) + 1, y, tile->icon[1], tile->fg_color, tile->bg_color);
+            display_set_cell(x * 2, y, tile->icon[0], tile->fg_color, tile->bg_color, false);
+            display_set_cell((x * 2) + 1, y, tile->icon[1], tile->fg_color, tile->bg_color, false);
+        }
+    }
+
+    // render entites
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        entity_t* entity = &scene_ptr->entities[i];
+        if (entity->id != -1)
+        {
+            entity_data_t* entity_data = get_entity_data(entity->id);
+            display_set_cell(entity->x * 2, entity->y, entity_data->icon[0], entity_data->fg_color, entity_data->bg_color, false);
+            display_set_cell((entity->x * 2) + 1, entity->y, entity_data->icon[1], entity_data->fg_color, entity_data->bg_color, false);
         }
     }
 }

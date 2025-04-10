@@ -4,12 +4,21 @@
 static database_t s_database;
 
 
-void database_setup_tile(int tile_id, const char* icon, COLOR_T fg_color, COLOR_T bg_color)
+void database_setup_tile(int tile_id, const char* icon, COLOR_T fg_color, COLOR_T bg_color, bool solid)
 {
     tile_data_t* t = &s_database.tiles[tile_id];
     t->icon = icon;
     t->fg_color = fg_color;
     t->bg_color = bg_color;
+    t->solid = solid;
+}
+
+void database_setup_entity(int entity_id, const char* icon, COLOR_T fg_color, COLOR_T bg_color)
+{
+    entity_data_t* e = &s_database.entities[entity_id];
+    e->icon = icon;
+    e->fg_color = fg_color;
+    e->bg_color = bg_color;
 }
 
 
@@ -31,10 +40,11 @@ void database_setup_enemy(int enemy_id, const char* name, int hp, int atk, int s
 
 void database_init()
 {
-    database_setup_tile(TILE_AIR, "  ", COLOR_WHITE, COLOR_BLACK);
-    database_setup_tile(TILE_WALL, "[]", COLOR_WHITE, COLOR_BLACK);
-    database_setup_tile(TILE_PLAYER, "$@", COLOR_GREEN, COLOR_BLACK);
-    database_setup_tile(TILE_ENEMY, "$@", COLOR_RED, COLOR_BLACK);
+    database_setup_tile(TILE_AIR, "  ", COLOR_WHITE, COLOR_BLACK, false);
+    database_setup_tile(TILE_WALL, "[]", COLOR_WHITE, COLOR_BLACK, true);
+
+    database_setup_entity(ENTITY_PLAYER, "$@", COLOR_GREEN, COLOR_BLACK);
+    database_setup_entity(ENTITY_ENEMY, "$@", COLOR_RED, COLOR_BLACK);
 
     database_setup_sprite(SPRITE_CAT, "cat");
     database_setup_sprite(SPRITE_BAT, "bat");
@@ -58,6 +68,12 @@ const enemy_data_t* get_enemy_data(int enemy_id)
 const tile_data_t* get_tile_data(int tile_id)
 {
     return &s_database.tiles[tile_id];
+}
+
+
+const entity_data_t* get_entity_data(int entity_id)
+{
+    return &s_database.entities[entity_id];
 }
 
 

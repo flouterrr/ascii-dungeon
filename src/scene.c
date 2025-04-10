@@ -1,23 +1,34 @@
 #include "scene.h"
 
 
+void scene_init(scene_t* scene)
+{
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        scene->entities[i].id = -1;
+    }
+
+    scene_clear(scene);
+}
+
+
 void scene_clear(scene_t* scene)
 {
     for(int i = 0; i < GRID_SIZE; i++) {
-        scene->data[i] = TILE_AIR;
+        scene->tiles[i] = TILE_AIR;
     }
 }
 
 
 int scene_get_tile_id(scene_t* scene, int x, int y)
 {
-    return scene->data[x + (GRID_WIDTH * y)];
+    return scene->tiles[x + (GRID_WIDTH * y)];
 }
 
 
 void scene_set_tile(scene_t* scene, int x, int y, int tile_id)
 {
-    scene->data[x + (GRID_WIDTH * y)] = tile_id;
+    scene->tiles[x + (GRID_WIDTH * y)] = tile_id;
 }
 
 
@@ -79,3 +90,55 @@ void scene_make_hallway(scene_t* scene, int from_x, int from_y, int to_x, int to
         stage++;
     }
 }
+
+
+void scene_add_entity(scene_t* scene, int entity_id, int x, int y)
+{
+    for (int i = 0; i < MAX_ENTITIES; i++)
+    {
+        entity_t* entity = &scene->entities[i];
+        if (entity->id == -1)
+        {
+            entity->id = entity_id;
+            entity->x = x;
+            entity->y = y;
+            break;
+        }
+    }
+}
+
+
+void scene_entity_update(scene_t* scene, entity_t* entity, char input)
+{
+    switch (entity->id)
+    {
+
+    case ENTITY_PLAYER:
+        // player movement
+        int p_x = (int)(input == 'd') - (int)(input == 'a');
+        int p_y = (int)(input == 's') - (int)(input == 'w');
+        scene_entity_move(scene, entity, p_x, p_y);
+        break;
+
+    case ENTITY_ENEMY:
+        break;
+    }
+}
+
+
+void scene_entity_move(scene_t* scene, entity_t* entity, int move_x, int move_y)
+{
+    if (move_x == 0 && move_y == 0) return;
+
+    int new_x = entity->x + move_x;
+    int new_y = entity->y + move_y;
+    
+    int colliding_tile_id = scene_get_tile_id(scene, new_x, new_y);
+    tile_data_t* tile_data = get_tile_data(colliding_tile_id);
+    if (tile_data->solid) return;
+
+    entity->x = new_x;
+    entity->y = new_y;
+}
+
+

@@ -35,7 +35,7 @@ void console_init()
     printf(ESC "[?25l");
 
     // setting the console title
-    printf(ESC "]2;%s\x07", "ASCII Dunegeon");
+    printf(ESC "]2;%s\x07", "ASCII Dungeon");
 
     // switch to alternate screen buffer
     printf(ESC "[?1049h");
@@ -95,6 +95,7 @@ void console_replace_char(int x, int y, char c, CONSOLE_CHAR_MODE_T mode, COLOR_
     console_set_color(fg_color, bg_color);
     console_set_char_mode(mode);
     printf("%c", c);
+    printf(ESC "[?25l");
 }
 
 

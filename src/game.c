@@ -16,8 +16,7 @@ void game_init()
     s_game.cur_game_state = GAME_STATE_OVERWORLD;
 
     scene_t* scene_ptr = &s_game.overworld.scene;
-
-    scene_clear(scene_ptr);
+    scene_init(scene_ptr);
 
     scene_make_room(scene_ptr, 1, 1, 12, 8);
     scene_make_room(scene_ptr, 17, 15, 18, 6);
@@ -27,8 +26,8 @@ void game_init()
     scene_make_hallway(scene_ptr, 22, 8, 28, 8);
     scene_make_hallway(scene_ptr, 15, 12, 19, 12);
 
-    scene_set_tile(scene_ptr, 4, 4, TILE_PLAYER);
-    scene_set_tile(scene_ptr, 7, 5, TILE_ENEMY);
+    scene_add_entity(scene_ptr, ENTITY_PLAYER, 4, 4);
+    scene_add_entity(scene_ptr, ENTITY_ENEMY, 7, 5);
 
     printf("Initialization finished, press any key.\n");
     getch();
